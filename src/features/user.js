@@ -1,32 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toggleDarkClasses } from "../components/elements/hooks";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    name: "",
-    email: "",
+    theme: "dark",
   },
   reducers: {
-    login: (state, action) => {
-      state.name = action.payload.name;
-      state.email = action.payload.email;
+    setTheme: (state, action) => {
+      if (["light", "dark"].includes(action.payload)) {
+        state.theme = action.payload;
+        toggleDarkClasses(action);
+        localStorage.setItem("theme", action.payload);
+      }
     },
   },
   extraReducers: (builder) => {
-    // builder.addCase(checkLocalUser.fulfilled, (state, action) => {
-    //   if (action.payload !== null) {
-    //     state.data.find((item) => item.id == 6).name = "Account";
-    //     state.data.find((item) => item.id == 6).link = "/account";
-    //     state.data.find((item) => item.id == 7).name = "Logout";
-    //     state.data.find((item) => item.id == 7).link = "/logout";
-    //   }
-    // });
+    builder.addCase(getInitTheme.fulfilled, (state, action) => {
+      state.theme = action.payload;
+      toggleDarkClasses(action);
+    });
   },
 });
-// export const getProducts = createAsyncThunk("product/get", async () => {
-//   let data = await fetch("https://fakestoreapi.com/products");
-//   let result = await data.json();
-//   return result;
-// });
-export const { login } = userSlice.actions;
+export const getInitTheme = createAsyncThunk("theme/initial", async () => {
+  let data = localStorage.getItem("theme");
+  if (data === null) {
+    localStorage.setItem("theme", "light");
+    return "light";
+  }
+  return data;
+});
+
+export const { setTheme } = userSlice.actions;
 export default userSlice.reducer;
