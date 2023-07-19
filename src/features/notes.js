@@ -10,12 +10,35 @@ const notesSlice = createSlice({
       { id: 3, title: "Third Note" },
       { id: 4, title: "Fourth Note" },
       { id: 5, title: "Fifth Note" },
+      { id: 6, title: "Sixth Note" },
+      { id: 7, title: "Seventh Note" },
+      { id: 8, title: "Eighth Note" },
+      { id: 9, title: "Ninth Note" },
+      { id: 10, title: "Tenth Note" },
+      { id: 11, title: "Eleventh Note" },
+      { id: 12, title: "Twelfth Note" },
+      { id: 13, title: "Thirteenth Note" },
+      { id: 14, title: "Fourteenth Note" },
+      { id: 15, title: "Fifteenth Note" },
+      { id: 16, title: "Sixteenth Note" },
+      { id: 17, title: "Seventeenth Note" },
+      { id: 18, title: "Eighteenth Note" },
     ],
+    viewallToggle:false,
+    navbarHeight:100,
+
   },
   reducers: {
     setActiveTitle: (state, action) => {
       state.activeTitle = action.payload;
     },
+    setViewAllToggle: (state, action) => {
+      state.viewallToggle = action.payload;
+    },
+    setNavbarHeight: (state, action) => {
+      state.navbarHeight = action.payload;
+    }
+
   },
   extraReducers: (builder) => {
     // builder.addCase(checkLocalUser.fulfilled, (state, action) => {
@@ -33,5 +56,5 @@ const notesSlice = createSlice({
 //   let result = await data.json();
 //   return result;
 // });
-export const { setActiveTitle } = notesSlice.actions;
+export const { setActiveTitle ,setViewAllToggle,setNavbarHeight} = notesSlice.actions;
 export default notesSlice.reducer;

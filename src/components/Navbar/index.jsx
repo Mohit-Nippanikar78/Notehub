@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTheme } from '../../features/user'
-
+import { setNavbarHeight } from '../../features/notes'
 const Navbar = () => {
     let dispatch = useDispatch()
+    let navRef = useRef(null)
     let { theme } = useSelector(state => state.user)
+    useEffect(() => {
+        dispatch(setNavbarHeight(navRef.current.getBoundingClientRect().height))
+    }, [])
     return (
-        <div className="z-20 flex w-full items-center justify-between pr-8 shadow-light-nav dark:bg-offblack dark:shadow-dark-nav">
+        <div ref={navRef} className="col-span-6 bg-white z-40 flex w-full items-center justify-between pr-8 shadow-light-nav dark:bg-offblack dark:shadow-dark-nav">
             {theme == "light" ?
                 <img src="/images/dark-logo.png" className='w-40' alt="" /> :
                 <img src="/images/light-logo.png" className='w-40' alt="" />
