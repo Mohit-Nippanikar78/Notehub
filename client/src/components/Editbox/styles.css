@@ -1,0 +1,17 @@
+.editbox::-webkit-scrollbar {
+  width: 0.5em;
+}
+
+.editbox:-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.editbox::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 20px;
+}
+.heading-gradient {
+  background: -webkit-linear-gradient(120deg,#e91e63 ,#272a80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
