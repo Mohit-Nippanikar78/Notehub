@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-export const serverUrl = "http://localhost:3000";
+//export const serverUrl = "http://localhost:3000";
+export const serverUrl = process.env.VITE_SERVER_URL;
 export const toggleDarkClasses = (action) => {
   if (action.payload === "dark") document.documentElement.classList.add("dark");
   else document.documentElement.classList.remove("dark");
