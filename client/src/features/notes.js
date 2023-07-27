@@ -5,7 +5,7 @@ import { serverUrl } from "../components/elements/hooks";
 const notesSlice = createSlice({
   name: "notes",
   initialState: {
-    editor: true,
+    editor: false,
     activeTitleId: 0,
     heads: { data: [], hasMore: true },
     doc: { loading: false, data: [], saving: false },
