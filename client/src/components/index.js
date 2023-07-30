@@ -1,4 +1,5 @@
 export {default as Navbar } from './Navbar'
 export {default as Sidebar } from './Sidebar'
 export {default as ViewAll } from './ViewAll'
-export {default as Editbox } from './Editbox'
+export {default as Home } from './Home'
+export {default as Urlnote } from './Urlnote'

@@ -3,7 +3,7 @@ import Codebox from './Codebox'
 import Textbox from './Textbox'
 import { BiSolidRightArrow } from "react-icons/bi"
 import { useDispatch, useSelector } from 'react-redux'
-import { newField } from '../../features/notes'
+import { newField } from '../../../features/notes'
 const Editdoc = () => {
     let { doc } = useSelector(s => s.notes)
     return (
@@ -23,15 +23,15 @@ const Editdoc = () => {
 }
 const EditdocAdd = () => {
     let dispatch = useDispatch()
-    let { activeTitleId } = useSelector(s => s.notes)
+    let { doc } = useSelector(s => s.notes)
     return (
         <div className='flex items-center gap-4'>
             <BiSolidRightArrow className="text-md" />
             <button className={` rounded-md py-2 px-3 font-bold  flex text-md items-center justify-start gap-4 shadow-lg text-white`} style={{ background: "linear-gradient(130deg,#276880,#60c689)" }}
-                onClick={() => { dispatch(newField({ noteId: activeTitleId, type: "textbox" })) }}
+                onClick={() => { dispatch(newField({ noteId: doc.docId, type: "textbox" })) }}
             >Add Textbox</button>
             <button className={` rounded-md py-2 px-3 font-bold  flex text-md items-center justify-start gap-4 shadow-lg text-white`} style={{ background: "linear-gradient(130deg,#572780,#276880)" }}
-                onClick={() => { dispatch(newField({ noteId: activeTitleId, type: "codebox" })) }}
+                onClick={() => { dispatch(newField({ noteId: doc.docId, type: "codebox" })) }}
             >Add Codebox</button>
         </div>
     )

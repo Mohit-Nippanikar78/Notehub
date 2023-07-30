@@ -9,10 +9,9 @@ const Root = () => {
     return (
         <Provider store={store}>
             <Overlays />
-            <div className="grid grid-cols-6    ">
+            <div className="max-h-screen grid grid-cols-6">
                 <Navbar />
                 <Sidebar />
-                <ViewAll />
                 <Outlet />
             </div>
         </Provider>

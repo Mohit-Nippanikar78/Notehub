@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import { changeText, updateField } from '../../features/notes';
+import { changeText, updateField } from '../../../features/notes';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDebounce } from '../elements/hooks';
+import { useDebounce } from '../../elements/hooks';
 
 const Textbox = ({ item }) => {
     let { id, con } = item;

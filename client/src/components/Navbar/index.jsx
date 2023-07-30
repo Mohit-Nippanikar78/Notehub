@@ -3,7 +3,7 @@ import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md'
 import { RiAdminLine } from 'react-icons/ri'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTheme } from '../../features/user'
-import { setEditor, setNavbarHeight } from '../../features/notes'
+import { setEditor, setNavbarHeight, setactiveTitleId } from '../../features/notes'
 import { useOutsideClick } from '../elements/hooks'
 import process from "process";
 const Navbar = () => {
@@ -21,8 +21,8 @@ const Navbar = () => {
     return (
         <div ref={navRef} className="col-span-6 bg-white z-40 flex w-full items-center justify-between pr-8 shadow-light-nav dark:bg-offblack dark:shadow-dark-nav">
             {theme == "light" ?
-                <img src="/images/dark-logo.png" className='w-40' alt="" /> :
-                <img src="/images/light-logo.png" className='w-40' alt="" />
+                <img src="/images/dark-logo.png" className='w-40  cursor-pointer' alt="" onClick={() => { dispatch(setactiveTitleId(0)) }} /> :
+                <img src="/images/light-logo.png" className='w-40 cursor-pointer' alt="" onClick={() => { dispatch(setactiveTitleId(0)) }} />
             }
             <div className="flex gap-8 items-center">
                 {!editor ?

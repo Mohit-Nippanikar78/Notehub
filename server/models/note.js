@@ -16,6 +16,7 @@ const NoteSchema = Schema(
         },
       },
     ],
+    shorturl: String,
   },
   { timestamps: true }
 );

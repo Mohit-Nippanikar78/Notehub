@@ -7,12 +7,13 @@ import {
 
 import "./App.css";
 import Root from "./Root";
-import { Editbox } from "./components";
+import { Home, Urlnote, ViewAll } from "./components";
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Root />}>
-        <Route index element={<Editbox />} />
+        <Route index element={<Home />} />
+        <Route path="/:noteUrl" element={<Urlnote />} />
         {/*  <Route path="/products" element={<ProductCatalogue />} />
         <Route path="/login" element={<Login />} >
           <Route index element={<LoginPage />} />

@@ -8,7 +8,14 @@ const notesSlice = createSlice({
     editor: false,
     activeTitleId: 0,
     heads: { data: [], hasMore: true },
-    doc: { loading: false, data: [], saving: false },
+    doc: {
+      loading: false,
+      docId: 0,
+      head: "",
+      data: [],
+      shorturl: { data: "", unique: true },
+      saving: false,
+    },
     viewallToggle: false,
     navbarHeight: 100,
   },
@@ -18,20 +25,14 @@ const notesSlice = createSlice({
     },
     setactiveTitleId: (state, action) => {
       state.activeTitleId = action.payload;
+      state.viewallToggle = false;
+      //action.payload !== 0 && (state.doc.docId = action.payload);
     },
     setViewAllToggle: (state, action) => {
       state.viewallToggle = action.payload;
     },
     setNavbarHeight: (state, action) => {
       state.navbarHeight = action.payload;
-    },
-    addDocField: (state, action) => {
-      let { type } = action.payload;
-      if (type == "Codebox") {
-        state.doc.push({ id: 12, type: "Codebox", con: "Your code here" });
-      } else if (type == "Textbox") {
-        state.doc.push({ id: 13, type: "Textbox", con: "Your text here" });
-      }
     },
     changeText: (state, action) => {
       let { id, type, text } = action.payload;
@@ -41,10 +42,18 @@ const notesSlice = createSlice({
         state.doc.data.find((item) => item.id == id).title = text;
       }
     },
-    changeHead: (state, action) => {
-      console.log(action.payload);
-      let { text } = action.payload;
-      state.heads.find((item) => item.id == state.activeTitleId).head = text;
+    setDocData: (state, action) => {
+      let { id, fields, shorturl, head } = action.payload;
+      return {
+        ...state,
+        doc: {
+          docId: id,
+          head,
+          data: fields,
+          shorturl: { data: shorturl },
+          loading: false,
+        },
+      };
     },
   },
   extraReducers: (builder) => {
@@ -56,24 +65,39 @@ const notesSlice = createSlice({
         heads: { data: [...state.heads.data, ...data], hasMore },
       };
     });
-
     builder
       .addCase(getNoteFields.pending, (state, action) => {
-        return { ...state, doc: { loading: true, data: [] } };
+        state.doc.data = [];
+        state.doc.loading = true;
       })
       .addCase(getNoteFields.fulfilled, (state, action) => {
-        return { ...state, doc: { data: action.payload, loading: false } };
+        let { id, fields, shorturl, head } = action.payload;
+        return {
+          ...state,
+          doc: {
+            docId: id,
+            head,
+            data: fields,
+            shorturl: { data: shorturl },
+            loading: false,
+          },
+        };
       });
     builder.addCase(newNote.fulfilled, (state, action) => {
-      let { id, head, fields } = action.payload;
-      console.log(action.payload);
+      let { id, head, fields, shorturl } = action.payload;
       return {
         ...state,
         heads: {
           data: [{ id, head }, ...state.heads.data],
           hasMore: state.heads.hasMore,
         },
-        doc: { loading: false, data: fields },
+        doc: {
+          docId: id,
+          head,
+          loading: false,
+          data: fields,
+          shorturl: { data: shorturl },
+        },
         activeTitleId: id,
       };
     });
@@ -81,6 +105,15 @@ const notesSlice = createSlice({
       let { id, head } = action.payload;
       state.heads.data.find((item) => item.id == id).head = head;
     });
+    builder
+      .addCase(updateShorturl.pending, (state) => {
+        state.doc.saving = true;
+      })
+      .addCase(updateShorturl.fulfilled, (state, action) => {
+        let { id, shorturl, unique } = action.payload;
+        state.doc.saving = false;
+        state.doc.shorturl = { data: shorturl, unique };
+      });
     builder.addCase(newField.fulfilled, (state, action) => {
       state.doc.data.push(action.payload);
     });
@@ -112,7 +145,7 @@ export const {
   addDocField,
   setEditor,
   changeText,
-  changeHead,
+  setDocData,
 } = notesSlice.actions;
 export const getNoteHeads = createAsyncThunk("notes/get", async (page) => {
   let res = await axios.get(`${serverUrl}/notes/heads?page=${page}`);
@@ -130,14 +163,23 @@ export const newNote = createAsyncThunk("notes/add", async () => {
 export const updateNotehead = createAsyncThunk(
   "noteshead/update",
   async (note) => {
-    console.log(note);
+    let res = await axios.put(`${serverUrl}/notes/note/${note.id}?type=head`, {
+      head: note.head,
+    });
+    return res.data;
+  }
+);
+export const updateShorturl = createAsyncThunk(
+  "notesshorturl/update",
+  async (note) => {
     let res = await axios.put(
-      `${serverUrl}/notes/note/${note.id}?type=head`,
-      note
+      `${serverUrl}/notes/note/${note.id}?type=shorturl`,
+      { shorturl: note.shorturl }
     );
     return res.data;
   }
 );
+
 //Adding Codebox or Textbox to a note
 export const newField = createAsyncThunk("field/add", async (obj) => {
   let { noteId, type } = obj;
@@ -170,4 +212,5 @@ export const deleteField = createAsyncThunk("field/delete", async (obj) => {
   );
   return res.data;
 });
+
 export default notesSlice.reducer;

@@ -14,7 +14,9 @@ const addNote = async (req, res) => {
       ],
     };
     let newNote = await Note.create(newNoteInit);
-    let { id, head } = newNote;
+    newNote.shorturl = newNote._id.toString();
+    await newNote.save();
+    let { id, head, shorturl } = newNote;
     let fields = newNote.fields.map((item) => {
       if (item.type == "codebox") {
         return {
@@ -31,7 +33,7 @@ const addNote = async (req, res) => {
         };
       }
     });
-    res.send({ id, head, fields });
+    res.send({ id, head, fields, shorturl });
   } catch (error) {
     res.send(error);
   }
@@ -39,22 +41,41 @@ const addNote = async (req, res) => {
 const getNoteHeads = async (req, res) => {
   try {
     let { page } = req.query;
-    let pages = 10;
-    let notes = await Note.find()
-      .sort({ updatedAt: -1 })
-      .skip(parseInt(page) * pages)
-      .limit(pages)
-      .exec();
-    let heads = await notes.map((note) => {
-      let { id, head } = note;
-      return { id, head };
-    });
-    let nextnotes = await Note.find()
-      .sort({ updatedAt: -1 })
-      .skip((parseInt(page) + 1) * pages)
-      .limit(pages)
-      .exec();
-    res.send({ data: heads, hasMore: nextnotes.length > 0 });
+    if (req.query?.type == "viewall") {
+      let pages = 30;
+      let notes = await Note.find()
+        .sort({ updatedAt: -1 })
+        .skip(parseInt(page) * pages)
+        .limit(pages)
+        .exec();
+      let heads = await notes.map((note) => {
+        let { id, head, shorturl } = note;
+        return { id, head, shorturl };
+      });
+      let nextnotes = await Note.find()
+        .sort({ updatedAt: -1 })
+        .skip((parseInt(page) + 1) * pages)
+        .limit(pages)
+        .exec();
+      res.send({ data: heads, hasMore: nextnotes.length > 0 });
+    } else {
+      let pages = 10;
+      let notes = await Note.find()
+        .sort({ updatedAt: -1 })
+        .skip(parseInt(page) * pages)
+        .limit(pages)
+        .exec();
+      let heads = await notes.map((note) => {
+        let { id, head } = note;
+        return { id, head };
+      });
+      let nextnotes = await Note.find()
+        .sort({ updatedAt: -1 })
+        .skip((parseInt(page) + 1) * pages)
+        .limit(pages)
+        .exec();
+      res.send({ data: heads, hasMore: nextnotes.length > 0 });
+    }
   } catch (error) {
     res.send(error);
   }
@@ -83,7 +104,42 @@ const getNoteFields = async (req, res) => {
         }
       })
     );
-    res.send(fields);
+    let { id, head, shorturl } = note;
+    res.send({ id, fields, head, shorturl });
+  } catch (error) {
+    res.send(error);
+  }
+};
+const getNoteFieldUrl = async (req, res) => {
+  try {
+    let { shorturl } = req.params;
+    let note = await Note.findOne({ shorturl }).exec();
+    if (note) {
+      let fields = await Promise.all(
+        note.fields.map(async (item) => {
+          if (item.type == "codebox") {
+            let codebox = await Codebox.findById(item.boxId);
+            return {
+              id: codebox._id.toString(),
+              title: codebox.title,
+              con: codebox.con,
+              type: item.type,
+            };
+          } else if (item.type == "textbox") {
+            let textbox = await Textbox.findById(item.boxId);
+            return {
+              id: textbox._id.toString(),
+              con: textbox.con,
+              type: item.type,
+            };
+          }
+        })
+      );
+      let { id, head } = note;
+      res.send({ id, fields, head, shorturl });
+    } else {
+      res.send({ error: "nonote" });
+    }
   } catch (error) {
     res.send(error);
   }
@@ -91,13 +147,26 @@ const getNoteFields = async (req, res) => {
 const updateNote = async (req, res) => {
   try {
     let { type } = req.query;
+    let { noteId } = req.params;
+    let note = await Note.findById(noteId);
     if (type == "head") {
-      let { noteId } = req.params;
-      let note = await Note.findById(noteId);
       note.head = req.body.head;
       await note.save();
       let { id, head } = note;
       res.send({ id, head });
+    } else if (type == "shorturl") {
+      console.log("entry");
+      let alreadyNote = await Note.findOne({
+        shorturl: req.body.shorturl,
+      }).exec();
+      let { id, shorturl } = note;
+      if (alreadyNote) {
+        res.send({ id, shorturl, unique: false });
+      } else {
+        note.shorturl = req.body.shorturl;
+        await note.save();
+        res.send({ id, shorturl, unique: true });
+      }
     }
   } catch (error) {
     res.send(error);
@@ -182,6 +251,7 @@ module.exports = {
   addNote,
   getNoteHeads,
   getNoteFields,
+  getNoteFieldUrl,
   updateNote,
   addNoteField,
   deleteNote,

@@ -9,7 +9,7 @@ import { Dna } from 'react-loader-spinner'
 const Sidebar = () => {
     let dispatch = useDispatch()
     let btnRef = useRef()
-    let { heads, activeTitleId, navbarHeight } = useSelector(state => state.notes)
+    let { heads, activeTitleId, navbarHeight, editor } = useSelector(state => state.notes)
     const [page, setpage] = useState(0)
     useEffect(() => {
         dispatch(getNoteHeads(page))
@@ -17,7 +17,7 @@ const Sidebar = () => {
     return (
         <div className="relative bg-white  z-40  min-w-[14vw] shadow-light-side dark:bg-offblack dark:shadow-none"   >
             <div ref={btnRef} className='sticky top-0 bg-white shadow-light-nav py-3 px-6 flex items-center justify-between '>
-                <button className={`rounded-md py-2 px-3 font-bold  flex text-md items-center justify-start gap-4 shadow-lg text-white`} style={{ background: "linear-gradient(130deg,#e91e63,#272a80)" }} onClick={() => { dispatch(newNote()) }}>Create Note</button>
+                <button disabled={!editor} className={`disabled:opacity-70 rounded-md py-2 px-3 font-bold  flex text-md items-center justify-start gap-4 shadow-lg text-white`} style={{ background: "linear-gradient(130deg,#e91e63,#272a80)" }} onClick={() => { dispatch(newNote()) }}>Create Note</button>
                 <MdGridView className='text-xl text-main hover:text-black cursor-pointer' onClick={() => { dispatch(setViewAllToggle(true)) }} />
             </div>
             <div className='sidebar-heads overflow-y-scroll pb-20' style={{ height: window.innerHeight - navbarHeight - btnRef.current?.getBoundingClientRect().height - 20 }}  >
