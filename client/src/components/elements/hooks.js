@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-//export const serverUrl = "http://localhost:3000";
-export const serverUrl = import.meta.env.VITE_SERVER_URL;
+export const serverUrl = "http://localhost:3000";
+//export const serverUrl = import.meta.env.VITE_SERVER_URL;
 export const toggleDarkClasses = (action) => {
   if (action.payload === "dark") document.documentElement.classList.add("dark");
   else document.documentElement.classList.remove("dark");
@@ -12,7 +12,6 @@ export const useOutsideClick = (ref, callback) => {
       callback();
     }
   };
-
   useEffect(() => {
     document.addEventListener("click", handleClick);
 
@@ -22,7 +21,7 @@ export const useOutsideClick = (ref, callback) => {
   });
 };
 export function copy(text) {
-  console.log(text)
+  console.log(text);
   navigator.clipboard.writeText(text);
 }
 export function useDebounce() {

@@ -20,9 +20,7 @@ const Codebox = ({ item }) => {
         setDrop(false)
     })
     useEffect(() => {
-        debounce(() => dispatch(updateField(
-            { noteId: doc.docId, boxId: id, type: "codebox", text: textareaRef.current.value, ele: "con" }
-        )))
+       
     }, [con])
     useEffect(() => {
         debounce(() => dispatch(updateField(

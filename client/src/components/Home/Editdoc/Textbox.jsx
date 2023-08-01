@@ -15,7 +15,7 @@ const Textbox = ({ item }) => {
         )))
     }, [con])
     return (
-        <textarea spellCheck={false} ref={textareaRef} className='h-max outline-0 [resize:none]' style={{ height: textareaRef.current?.scrollHeight }} type="text" value={con} onChange={(e) => { dispatch(changeText({ id, type: "con", text: e.target.value })) }} />
+        <textarea spellCheck={false} ref={textareaRef} className='h-max outline-0 [resize:none]' style={{ height: textareaRef.current?.scrollHeight }} type="text" defaultValue={con} onChange={(e) => { dispatch(changeText({ id, type: "con", text: e.target.value })) }} />
     )
 }
 
