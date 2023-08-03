@@ -26,8 +26,8 @@ const Navbar = () => {
             }
             <div className="flex gap-8 items-center">
                 {!editor ?
-                    <span class="align-middle bg-red-100 text-red-800 text-xs font-medium  px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Viewer</span>
-                    : <span class="align-middle bg-green-100 text-green-800 text-xs font-medium  px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Editor</span>}
+                    <span className="align-middle bg-red-100 text-red-800 text-xs font-medium  px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Viewer</span>
+                    : <span className="align-middle bg-green-100 text-green-800 text-xs font-medium  px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Editor</span>}
                 {passbox &&
                     <input type="password" autoFocus={true} placeholder='Enter passcode' className='selection-none text-md border py-1 px-3 focus:outline-0' onChange={(e) => {
                         if (e.target.value == import.meta.env.VITE_EDITOR_PASSCODE) {

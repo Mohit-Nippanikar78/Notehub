@@ -19,18 +19,15 @@ const Codebox = ({ item }) => {
     useOutsideClick(codeDropRef, () => {
         setDrop(false)
     })
-    useEffect(() => {
-       
-    }, [con])
-    useEffect(() => {
-        debounce(() => dispatch(updateField(
-            { noteId: doc.docId, boxId: id, type: "codebox", text: titleRef.current.value, ele: "title" }
-        )))
-    }, [title])
     return (
         <div className=" border rounded-md overflow-hidden">
             <div className="bg-offwhite px-4 py-2 flex justify-between items-center">
-                <input readOnly={!editor} ref={titleRef} type="text" value={title == "Untitled" ? `Untitled ${id}` : title} className='bg-transparent focus:outline-0 w-full' onChange={(e) => { dispatch(changeText({ id, type: "title", text: e.target.value })) }} />
+                <input readOnly={!editor} ref={titleRef} type="text" defaultValue={title == "Untitled" ? `Untitled ${id}` : title} className='bg-transparent focus:outline-0 w-full'
+                    onChange={(e) => {
+                        debounce(() => dispatch(updateField(
+                            { noteId: doc.docId, boxId: id, type: "codebox", text: e.target.value, ele: "title" }
+                        )))
+                    }} />
                 <div className="py-0 flex gap-4">
                     <button type="button" className="inline-flex  justify-center  rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" onClick={() => { copy(con); }} >
                         <AiOutlineCopy className='text-xl' />
@@ -47,7 +44,12 @@ const Codebox = ({ item }) => {
             </div>
             <div className={`${editor ? "p-2" : "p-0"}`} ref={codeConRef}>
                 {editor ?
-                    <textarea key={editor} value={con} spellCheck={false} ref={textareaRef} className='h-max w-full outline-0 [resize:none]' style={{ height: textareaRef.current?.scrollHeight }} type="text" onChange={(e) => { dispatch(changeText({ id, type: "con", text: e.target.value })) }} />
+                    <textarea key={editor} defaultValue={con} spellCheck={false} ref={textareaRef} className='h-max w-full outline-0 [resize:none]' style={{ height: textareaRef.current?.scrollHeight }} type="text"
+                        onChange={(e) => {
+                            debounce(() => dispatch(updateField(
+                                { noteId: doc.docId, boxId: id, type: "codebox", text: e.target.value, ele: "con" }
+                            )))
+                        }} />
                     :
                     <SyntaxHighlighter language="javascript" style={nightOwl}>
                         {con}

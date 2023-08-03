@@ -85,6 +85,13 @@ const notesSlice = createSlice({
       });
     builder.addCase(newNote.fulfilled, (state, action) => {
       let { id, head, fields, shorturl } = action.payload;
+      console.log({
+        docId: id,
+        head,
+        loading: false,
+        data: fields,
+        shorturl: { data: shorturl, unique: true },
+      });
       return {
         ...state,
         heads: {
@@ -92,6 +99,7 @@ const notesSlice = createSlice({
           hasMore: state.heads.hasMore,
         },
         doc: {
+          ...state.doc,
           docId: id,
           head,
           loading: false,
@@ -201,6 +209,7 @@ export const updateField = createAsyncThunk("field/update", async (obj) => {
     `${serverUrl}/notes/note/${noteId}/field/${boxId}?type=${type}&element=${ele}`,
     { text }
   );
+
   return res.data;
 });
 //Deleting a Codebox or Textbox

@@ -4,19 +4,25 @@ import Textbox from './Textbox'
 import { BiSolidRightArrow } from "react-icons/bi"
 import { useDispatch, useSelector } from 'react-redux'
 import { newField } from '../../../features/notes'
-const Editdoc = () => {
-    let { doc } = useSelector(s => s.notes)
+import HomeNavbar from './HomeNavbar'
+const Editor = () => {
+    let { doc, editor, navbarHeight } = useSelector(s => s.notes)
     return (
-        <div className="bg-offwhite text-black p-4 ">
-            <div className="bg-white  rounded-md shadow-xl p-4 flex flex-col gap-6 pb-32">
-                {doc.data.map((item, i) => {
-                    if (item.type == "codebox") {
-                        return <Codebox item={item} key={i} />
-                    } else if (item.type == "textbox") {
-                        return <Textbox item={item} key={i} />
+        <div className='col-span-5 overflow-y-scroll editbox' style={{ height: window.innerHeight - navbarHeight }}>
+            <HomeNavbar />
+            <div className="bg-offwhite text-black p-4 ">
+                <div className="bg-white  rounded-md shadow-xl p-4 flex flex-col gap-6 pb-32">
+                    {doc.data.map((item, i) => {
+                        if (item.type == "codebox") {
+                            return <Codebox item={item} key={i} />
+                        } else if (item.type == "textbox") {
+                            return <Textbox item={item} key={i} />
+                        }
+                    })}
+                    {editor &&
+                        <EditdocAdd />
                     }
-                })}
-                <EditdocAdd />
+                </div>
             </div>
         </div>
     )
@@ -38,4 +44,4 @@ const EditdocAdd = () => {
 }
 
 
-export default Editdoc
+export default Editor;

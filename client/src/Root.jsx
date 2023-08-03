@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Provider, useDispatch } from 'react-redux'
+import { Provider, useDispatch, useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { store } from './features/store'
 import { Navbar, Sidebar, ViewAll } from './components'

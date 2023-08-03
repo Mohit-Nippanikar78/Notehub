@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AiOutlineDelete } from 'react-icons/ai'
-import { useDebounce, useOutsideClick } from '../elements/hooks'
-import { deleteNote, updateNotehead, updateShorturl } from '../../features/notes'
+import { useDebounce, useOutsideClick } from '../../elements/hooks'
+import { deleteNote, updateNotehead, updateShorturl } from '../../../features/notes'
 import { FiRefreshCw } from 'react-icons/fi'
 import { TbTableShortcut } from 'react-icons/tb'
 const HomeNavbar = () => {
@@ -11,19 +11,16 @@ const HomeNavbar = () => {
     let deleteBtnRef = useRef(null)
     let { editor, doc } = useSelector(state => state.notes);
     const [delBtn, setDelBtn] = useState(false)
-    const [title, setTitle] = useState("")
     useOutsideClick(deleteBtnRef, () => {
         setDelBtn(false)
     })
-    useEffect(() => {
-        setTitle(doc.head)
-    }, []);
-    useEffect(() => {
-        debounce(() => dispatch(updateNotehead({ "id": doc.docId, "head": title })))
-    }, [title]);
     return (
         <div className='z-30 sticky top-0 bg-white shadow-light-nav py-3 px-6 flex items-center justify-between '>
-            <input className={` border-white border-b text-lg font-bold tracking-wider focus:outline-0 focus:border-black`} readOnly={!editor} value={title} onChange={(e) => { setTitle(e.target.value) }} />
+            <input className={` border-white border-b text-lg font-bold tracking-wider focus:outline-0 focus:border-black`} readOnly={!editor}
+                defaultValue={doc.head}
+                onChange={(e) => {
+                    debounce(() => dispatch(updateNotehead({ "id": doc.docId, "head": e.target.value })))
+                }} />
             <div className={`flex gap-4 items-center`}>
                 {editor && (
                     <>
@@ -61,7 +58,9 @@ const NavbarUrlBox = () => {
                     <div className="flex">
                         <div className="text-md border border-r-0 align-middle  py-1 pl-3">https://notenova.vercel.app/</div>
                         <input ref={urlInputRef} type="text" defaultValue={doc.shorturl.data} autoFocus={true} className='selection-none min-w-[300px] text-md border border-l-0 py-1 pr-3 focus:outline-0'
-                            onChange={(e) => { debounce(() => { dispatch(updateShorturl({ id: doc.docId, shorturl: urlInputRef.current.value })) }) }} />
+                            onChange={(e) => {
+                                debounce(() => { dispatch(updateShorturl({ id: doc.docId, shorturl: urlInputRef.current.value })) })
+                            }} />
                     </div>
                     {!doc.shorturl.unique &&
                         <div className=" text-xs font-semibold  py-1 text-red-500">

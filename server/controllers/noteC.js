@@ -59,7 +59,7 @@ const getNoteHeads = async (req, res) => {
         .exec();
       res.send({ data: heads, hasMore: nextnotes.length > 0 });
     } else {
-      let pages = 10;
+      let pages = 15;
       let notes = await Note.find()
         .sort({ updatedAt: -1 })
         .skip(parseInt(page) * pages)
