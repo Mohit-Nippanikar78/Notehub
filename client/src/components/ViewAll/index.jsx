@@ -13,9 +13,7 @@ const ViewAll = () => {
     const [heads, setHeads] = useState([]);
     useEffect(() => {
         axios.get(`${serverUrl}/notes/heads?page=${page}&type=viewall`).then(res => {
-            // console.log(res.data);
             setHeads(res.data.data);
-            console.log(res.data.data);
         })
     }, [page])
 

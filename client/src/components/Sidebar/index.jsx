@@ -12,7 +12,6 @@ const Sidebar = () => {
     let { heads, activeTitleId, navbarHeight, editor } = useSelector(state => state.notes)
     const [page, setpage] = useState(0)
     useEffect(() => {
-        console.log(page)
         dispatch(getNoteHeads(page))
     }, [page])
     return (

@@ -85,13 +85,6 @@ const notesSlice = createSlice({
       });
     builder.addCase(newNote.fulfilled, (state, action) => {
       let { id, head, fields, shorturl } = action.payload;
-      console.log({
-        docId: id,
-        head,
-        loading: false,
-        data: fields,
-        shorturl: { data: shorturl, unique: true },
-      });
       return {
         ...state,
         heads: {
@@ -199,7 +192,6 @@ export const newField = createAsyncThunk("field/add", async (obj) => {
 //Deleting a note
 export const deleteNote = createAsyncThunk("note/delete", async (id) => {
   let res = await axios.delete(`${serverUrl}/notes/note/${id}`);
-  console.log(res.data);
   return res.data;
 });
 //updating a Codebox or Textbox
@@ -215,7 +207,6 @@ export const updateField = createAsyncThunk("field/update", async (obj) => {
 //Deleting a Codebox or Textbox
 export const deleteField = createAsyncThunk("field/delete", async (obj) => {
   let { noteId, boxId, type } = obj;
-  console.log(obj);
   let res = await axios.delete(
     `${serverUrl}/notes/note/${noteId}/field/${boxId}?type=${type}`
   );
