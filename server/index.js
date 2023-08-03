@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose
-  .connect("mongodb+srv://rnippanikar7:mhtnipp77@cluster0.jlxdzt8.mongodb.net/test1", {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
