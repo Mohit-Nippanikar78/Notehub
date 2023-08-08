@@ -25,7 +25,7 @@ export function copy(text) {
 }
 export function useDebounce() {
   const [timer, setTimer] = useState("");
-  function debounce(func, wait = 500) {
+  function debounce(func, wait = 1000) {
     clearTimeout(timer);
     const timeout = setTimeout(() => func(), wait);
     setTimer(timeout);
